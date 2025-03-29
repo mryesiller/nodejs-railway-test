@@ -6,7 +6,7 @@ const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 
 const app = express();
-const PORT = 51040;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -17,6 +17,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+    });
+});
 
 // API Documentation route
 app.get('/api-docs', (req, res) => {
